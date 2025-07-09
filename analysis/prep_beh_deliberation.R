@@ -103,34 +103,6 @@ df2$Linear_trend <- round(p_value_linear_trend,3)
 df1$Linear_trend <-round(p_value_linear_trend,3)
 df1$Version <- ifelse(i%%2!=0, 1,2)
 
-# library(MASS)
-# b <- boxcox(lm(df1$RT_Answer[df1$Condition==2]~1))
-# lambda <- b$x[which.max(b$y)]
-# lambda
-# new_x_exact <- (df1$RT_Answer[df1$Condition==2] ^ lambda - 1) / lambda
-
-# shapiro.test(df1$Tps_Esti)
-# shapiro.test(new_x_exact)
-# shapiro.test(df1$Strength_Squeeze)
-# library(ggpubr)
-# ggdensity(new_x_exact)
-
-# df1$Tps_Esti <- df1$Tps_Esti/max(df1$Tps_Esti,na.rm=T)
-# df1$RT_Answer <- df1$RT_Answer/max(df1$RT_Answer,na.rm=T)
-# df1$Strength_Squeeze <- df1$Strength_Squeeze/max(df1$Strength_Squeeze,na.rm=T)
-
-# df1$Tps_Esti <- scale(df1$Tps_Esti)
-# df1$RT_Answer <- scale(df1$RT_Answer)
-# df1$Strength_Squeeze <- scale(df1$Strength_Squeeze)
-# df1$Tps_Esti <- log(df1$Tps_Esti)
-# df1$RT_Answer <- log(df1$RT_Answer)
-# df1$Strength_Squeeze <- log(df1$Strength_Squeeze)
-# df1$Strength_Squeeze[which(df1$Hand_0left_1right==0)] <- scale(df1$Strength_Squeeze[which(df1$Hand_0left_1right==0)])
-# df1$Strength_Squeeze[which(df1$Hand_0left_1right==1)] <- scale(df1$Strength_Squeeze[which(df1$Hand_0left_1right==1)])
-
-df1$Ballon_Pos <- (df1$real_value_baloon_selected / (df1$real_value_baloon_selected+ df1$real_value_baloon_not_selected))*100
-df1$Token_Pos <- (df1$real_value_token_selected / (df1$real_value_token_selected+ df1$real_value_token_not_selected))*100
-df1$All_Pos <- ( (df1$real_value_baloon_selected +df1$real_value_token_selected) / (df1$real_value_baloon_selected +df1$real_value_token_selected +  df1$real_value_baloon_not_selected+ df1$real_value_token_not_selected))*100
 
 df4 <- rbind(df4, df1)
 
@@ -157,17 +129,7 @@ df2$Rejection_Short <- reject_short
 df2$Rejection_RT <- reject_rt
 df2$Rejection_Strength <- reject_strength
 df2$Rejection_Tps_esti <- reject_tps_esti
-df2$Score_baloon_Arbi <- mean(df1$Ballon_Pos[df1$Condition==0], na.rm=T)
-df2$Score_baloon_Edeli <- mean(df1$Ballon_Pos[df1$Condition==1], na.rm=T)
-df2$Score_baloon_Hdeli <- mean(df1$Ballon_Pos[df1$Condition==2], na.rm=T)
-df2$Score_token_Arbi <- mean(df1$Token_Pos[df1$Condition==0], na.rm=T)
-df2$Score_token_Edeli <- mean(df1$Token_Pos[df1$Condition==1], na.rm=T)
-df2$Score_token_Hdeli <- mean(df1$Token_Pos[df1$Condition==2], na.rm=T)
-df2$Score_both_Arbi <- mean(df1$All_Pos[df1$Condition==0], na.rm=T)
-df2$Score_both_Edeli <- mean(df1$All_Pos[df1$Condition==1], na.rm=T)
-df2$Score_both_Hdeli <- mean(df1$All_Pos[df1$Condition==2], na.rm=T)
 
-# df_bad_rt <- rbind.fill(df_bad_rt,  data.frame(t(idx)))
 
 df3 <- rbind(df3, cbind(df1$Condition, df1$RT_Answer, df1$Strength_Squeeze))
 
@@ -176,10 +138,6 @@ df1 <- tryCatch(read.csv(files_path2[i], sep = ";", header = TRUE),
  0})
 if (length(df1) > 1) {
 df_qst <- rbind(df_qst,df1)
-df2$Perf_Arbi <- round(mean(df1$Percentage_Perf[df1$Condition==0], na.rm=T),3)
-df2$Perf_Edeli <- round(mean(df1$Percentage_Perf[df1$Condition==1], na.rm=T),3)
-df2$Perf_Hdeli <- round(mean(df1$Percentage_Perf[df1$Condition==2], na.rm=T),3)
-
 df2$Q1_Arbi <- round(mean((df1$Q1[df1$Condition==0]), na.rm=T),3)
 df2$Q1_Edeli <- round(mean((df1$Q1[df1$Condition==1]), na.rm=T),3)
 df2$Q1_Hdeli <- round(mean((df1$Q1[df1$Condition==2]), na.rm=T),3)
@@ -219,18 +177,10 @@ df <- rbind.fill(df, df2)
 df <- df[order(df$Participant),]
 df4 <- df4[order(df4$Participant),]
 df_qst <- df_qst[order(df_qst$Participant),]
-# df_bad_rt <- df_bad_rt[order(df$Participant),]
 
-# for (i in 4:ncol(df)){
-#   df[,i] <- outlier(df[,i])
-# }
 write.table(df, file = paste(c("Extract_beh_deliberation_raw.csv"), collapse = ""), sep=";", dec = ".", row.names = FALSE)
 write.table(df4, file = paste(c("Extract_beh_deliberation_lmer.csv"), collapse = ""), sep=";", dec = ".", row.names = FALSE)
 write.table(df_qst, file = paste(c("Extract_beh_deliberation_qstr.csv"), collapse = ""), sep=";", dec = ".", row.names = FALSE)
-# write.table(df_bad_rt, file = paste(c("final_bad_trials_rt.csv"), collapse = ""), sep=";", dec = ".", row.names = FALSE)
-
-# library(xlsx)
-# write.xlsx(df, file = paste(c("final_deliberationV2.xlsx"), collapse = ""), sheet='1')
 
 
 

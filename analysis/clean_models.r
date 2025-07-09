@@ -11,7 +11,7 @@ outlier <- function(dat) {
   if (length(idx) > 0) {
     dat <- replace(dat, idx, NA)
   }
-  }
+  
   return(dat)
 }
 """
@@ -27,8 +27,7 @@ outlier <- function(dat) {
 """
 
 load('mslope_RP_bayes.Rdata')
-load('mmean_RP_bayes_02_03_24.Rdata')
-load('mWill_bayes.Rdata')
+load('mmean_RP_bayes.Rdata')
 load('mWill_bayes.Rdata')
 load('mSoA_bayes.Rdata')
 load('mRT_bayes.Rdata')
@@ -37,8 +36,8 @@ load('mDeliberation_bayes.Rdata')
 
 
 # You have to change mWill etc if you want to test other models
-Edeli_Arbi <-ranef(mmean_RP_bayes, pars= "Condition2M1",groups='Participant')
-Edeli_Hdeli <-ranef(mmean_RP_bayes, pars= "Condition3M2",groups='Participant')
+Edeli_Arbi <-ranef(mSoA_bayes, pars= "Condition2M1",groups='Participant')
+Edeli_Hdeli <-ranef(mSoA_bayes, pars= "Condition3M2",groups='Participant')
 
 a <- data.frame(Edeli_Arbi)
 b <- data.frame(Edeli_Hdeli)

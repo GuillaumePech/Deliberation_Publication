@@ -1,7 +1,6 @@
-library(brms); library(emmeans); library(lmerTest); library(bayestestR); library(dplyr); library(ggplot2)
+library(brms); library(emmeans); library(lmerTest); library(bayestestR); library(dplyr)
 
 setwd(dir = "C:/Users/mfbpe/Desktop/DATA/2022_deliberation//results/") # nolint # nolint
-.vsc.attach()
 
 cbind.fill <- function(...) {
   nm <- list(...)
@@ -23,7 +22,7 @@ outlier <- function(dat) {
     } 
   }
   return(dat)
-}
+
 
 normalize <- function(x,na=F) {
     return((x- min(x,na.rm=na)) /(max(x,na.rm=na)-min(x,na.rm=na)))
@@ -194,7 +193,7 @@ df3$Trial<-scale(df3$Trial)
 ########################################################################################
 '''
 
-setwd(dir = "C:/Users/mfbpe/Desktop/DATA/2022_deliberation//results/models/") # nolint # nolint
+setwd(dir = "C:/Users/mfbpe/Desktop/DATA/2022_deliberation//results/models/") 
 
 # ------------- SENSE OF AGENCY ----------------------------------
 
@@ -203,7 +202,7 @@ df3<-df5
 df3 <- df3[df3$Linear_trend<.05,]
 
 
-formula_SoA <- bf(SoA ~  Condition + Tps_Real + scale(RT) + Trial + (Condition| Participant))
+formula_SoA <- bf(SoA ~  Condition * Tps_Real + scale(RT) + Trial + (Condition * Tps_Real| Participant))
 get_prior(formula_SoA, data = df3)
 
 
@@ -219,7 +218,8 @@ prior_Soa <- prior("normal(0,30)", class="b") +
 
 mSoA_bayes <- brm(formula_SoA, data = df3, prior=prior_Soa, iter=2000, warmup = 1000, chains=1, backend = "cmdstanr", threads=threading(parallel::detectCores()), core=parallel::detectCores())
 
-save(mSoA_bayes, file = 'mSoA_bayes_28_05_24.Rdata')
+emmeans(mSoA_bayes, pairwise~Condition)
+save(mSoA_bayes, file = 'mSoA_bayes.Rdata')
 
 #------------------------------------------------
 #-----------------------WILL POWER-------------------------
